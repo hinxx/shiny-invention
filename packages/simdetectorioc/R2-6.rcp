@@ -1,8 +1,8 @@
-NG3E_PKG_NAME="simdetectorioc"
-NG3E_PKG_TAG=
-NG3E_PKG_BRANCH="R2-6"
-NG3E_PKG_SOURCE="https://github.com/hinxx/SimDetectorIOC.git"
-NG3E_PKG_UPSTREAM=
-NG3E_PKG_GROUP="iocs"
-NG3E_PKG_NEED_LIBS="adsimdetector:ESS-R2-6+1"
-NG3E_PKG_NEED_PRODS="adcore:ESS-R3-1+1"
+SHI_PKG_NAME="simdetectorioc"
+SHI_PKG_TAG=
+SHI_PKG_BRANCH="R2-6"
+SHI_PKG_SOURCE="https://github.com/hinxx/SimDetectorIOC.git"
+SHI_PKG_UPSTREAM=
+SHI_PKG_GROUP="iocs"
+SHI_PKG_NEED_LIBS="adsimdetector:ESS-R2-6+1"
+SHI_PKG_NEED_PRODS="adcore:ESS-R3-1+1"

@@ -1,8 +1,8 @@
-# Next Generation EEE - NG3E #
+# Shiny Invention - SHI
 
-Author: Hinko Kocevar <hinko.kocevar@esss.se>
+Author: Hinko Kocevar <hinkocevar@gmail.com>
 
-Updated: 2017-10-31
+Updated: 2017-11-01
 
 ## Goals
 
@@ -10,7 +10,7 @@ Intent is to have better control of the versions used in a given IOC. Also it
 would be a good idea to follow the community supported approach in support and
 IOC development under EPICS, instead of coming up with custom based tools.
 
-End audience of the NG3E are:
+End audience of the SHI are:
 * developers
 * integrators
 * users
@@ -30,13 +30,13 @@ dependent modules or IOCs.
 Package can be a support module (library) or an IOC. Developers would take example
 skeletons of module or IOC to start defining new package.
 
-Packages are then distributed as archives that need to be deployed into NG3E tree.
+Packages are then distributed as archives that need to be deployed into SHI tree.
 
 Source code as well as examples that may come with the original package (from
 3rd party) would be preserved and distributed.
 
 Developers are the ones that would have most in-depth understanding of how
-NG3E works and is supposed to be used.
+SHI works and is supposed to be used.
 
 ## Integrators
 
@@ -99,53 +99,53 @@ No assumptions shall be made about the versioning used by the upstream developer
 If forked repository needs modifications then a local branch shall be created. 
 Local branch is the only place where modifications take place.  
 When a branch is considered for a release it needs to be tagged.  
-Proposed branch naming schema is to prepend '__ESS-__' to a 3rd party tag name.  
+Proposed branch naming schema is to prepend '__SHI-__' to a 3rd party tag name.  
 Proposed tag naming schema is to append __'+\<release number\>'__ to a branch.
 
 Examples of valid branch and tag names:
 
 	BRANCH           TAG
 	-----------------------------
-	ESS-R4-32        ESS-R4-32+1, ESS-R4-32+3
+	SHI-R4-32        SHI-R4-32+1, SHI-R4-32+3
 	master           R1-6-1
-	ESS-1_4          ESS-1_4+2
-	ESS-1.0.7        ESS-1.0.7+6
-	ESS-master       ESS-master+2
+	SHI-1_4          SHI-1_4+2
+	SHI-1.0.7        SHI-1.0.7+6
+	SHI-master       SHI-master+2
 
 Examples of tag names:
 
-	ESS-R4-32+1
-	ESS-R4-32+2
-	ESS-1-6-1+5
-	ESS-1_4+7
-	ESS-1.0.7+66
-	ESS-master+3
+	SHI-R4-32+1
+	SHI-R4-32+2
+	SHI-1-6-1+5
+	SHI-1_4+7
+	SHI-1.0.7+66
+	SHI-master+3
 
 The branch or tag name is used in the recipe files to checkout desired source.
 
 ### Building from source
 
 In the __tools/__ folder two BASH scripts can be found.  
-The __ng3e_single.sh__ is used to work with a single package.  
-The __ng3e_batch.sh__ is used to work with a complete dependency chain of a given package.  
+The __shi_single.sh__ is used to work with a single package.  
+The __shi_batch.sh__ is used to work with a complete dependency chain of a given package.  
 
-Prior to executing one of these scripts user must set environment variable __NG3E_TOP__ to point to top level folder:
+Prior to executing one of these scripts user must set environment variable __SHI_TOP__ to point to top level folder:
 Example:
 
-	export NG3E_TOP=$(pwd)
+	export SHI_TOP=$(pwd)
 	
 	or
 	
-	export NG3E_TOP=/opt/ng3e
+	export SHI_TOP=/opt/shi
 
 Then scripts can be executed from any folder.
 
 Example:
 
-	$ bash git/ng3e-devel/tools/ng3e_single.sh 
+	$ bash git/shi-devel/tools/shi_single.sh 
 	Usage:
 	
-	 bash git/ng3e-devel/tools/ng3e_single.sh RECIPE COMMAND
+	 bash git/shi-devel/tools/shi_single.sh RECIPE COMMAND
 	
 	     RECIPE ....... path to recipe file (*.rcp)
 	
@@ -163,15 +163,15 @@ Example:
 	             PACKAGE ..... VERSION(s)
 	----------------------------------------------------------------------------------
 	             adandor ..... master.rcp R2-6.rcp 
-	            adaravis ..... ESS-master+1.rcp ESS-master+2.rcp ESS-master.rcp 
-	              adcore ..... ESS-R3-1+1.rcp ESS-R3-1.rcp master.rcp 
-	       adsimdetector ..... ESS-R2-6+1.rcp ESS-R2-6.rcp master.rcp 
-	           adsupport ..... ESS-R1-3+1.rcp ESS-R1-3.rcp master.rcp 
+	            adaravis ..... SHI-master+1.rcp SHI-master+2.rcp SHI-master.rcp 
+	              adcore ..... SHI-R3-1+1.rcp SHI-R3-1.rcp master.rcp 
+	       adsimdetector ..... SHI-R2-6+1.rcp SHI-R2-6.rcp master.rcp 
+	           adsupport ..... SHI-R1-3+1.rcp SHI-R1-3.rcp master.rcp 
 	             adtlccs ..... master+1.rcp master+2.rcp master.rcp 
 	            andorioc ..... master.rcp 
 	           aravisioc ..... master+1.rcp master.rcp 
 	        areadetector ..... master.rcp 
-	                asyn ..... ESS-R4-32+1.rcp ESS-R4-32.rcp master.rcp 
+	                asyn ..... SHI-R4-32+1.rcp SHI-R4-32.rcp master.rcp 
 	            autosave ..... master.rcp R5-8.rcp 
 	                base ..... 3.15.rcp R3.14.12.5.rcp R3.15.4.rcp 
 	                busy ..... master.rcp R1-6-1.rcp 
@@ -180,7 +180,7 @@ Example:
 	              dtuioc ..... master+1.rcp master.rcp 
 	              evrioc ..... master.rcp 
 	              imgioc ..... master+1.rcp master+2.rcp master+3.rcp master.rcp 
-	             mrfioc2 ..... 2.1.0.rcp ESS-master.rcp master.rcp 
+	             mrfioc2 ..... 2.1.0.rcp SHI-master.rcp master.rcp 
 	      simdetectorioc ..... master.rcp R2-6+1.rcp R2-6.rcp 
 	               sscan ..... master.rcp R2-10-2.rcp 
 	        streamdevice ..... master+1.rcp master.rcp 
@@ -283,7 +283,7 @@ Here is a git command to create a branch _newbranch_ based on the tag _v1.0_:
 	git checkout -b newbranch v1.0
 
 
-Create ESS branch from a tag (asyn as example):
+Create SHI branch from a tag (asyn as example):
 
 Sync with upstream first:
 
@@ -295,8 +295,8 @@ Sync with upstream first:
 	git push --tags
 	
 	
-Create __ESS-R4-32__ branch from __R4-32__ tag:
+Create __SHI-R4-32__ branch from __R4-32__ tag:
 
 	git checkout R4-32
-	git checkout -b ESS-R4-32
-	git push --set-upstream origin ESS-R4-32
+	git checkout -b SHI-R4-32
+	git push --set-upstream origin SHI-R4-32

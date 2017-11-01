@@ -1,8 +1,8 @@
-NG3E_PKG_NAME="adtlccs"
-NG3E_PKG_TAG="master+1"
-NG3E_PKG_BRANCH=
-NG3E_PKG_SOURCE="https://github.com/hinxx/adtlccs.git"
-NG3E_PKG_UPSTREAM=
-NG3E_PKG_GROUP="modules"
-NG3E_PKG_NEED_LIBS="adcore:ESS-R3-1+1"
-NG3E_PKG_NEED_PRODS=
+SHI_PKG_NAME="adtlccs"
+SHI_PKG_TAG="master+1"
+SHI_PKG_BRANCH=
+SHI_PKG_SOURCE="https://github.com/hinxx/adtlccs.git"
+SHI_PKG_UPSTREAM=
+SHI_PKG_GROUP="modules"
+SHI_PKG_NEED_LIBS="adcore:ESS-R3-1+1"
+SHI_PKG_NEED_PRODS=

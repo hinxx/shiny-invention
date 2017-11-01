@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Source this file from ng3e_env.sh to get all the handy functions.
+# Source this file from shi_env.sh to get all the handy functions.
 #
 
 ##################################################################
@@ -8,7 +8,7 @@
 ##################################################################
 
 function __dbg() {
-	[ -n "$NG3E_DEBUG" ] && echo "[DBG] $@"
+	[ -n "$SHI_DEBUG" ] && echo "[DBG] $@"
 }
 function __inf() {
 	echo "[INF] $@"
@@ -50,22 +50,22 @@ function __load_recipe() {
 	[ ! -f "$rcpfile" ] && __nok "recipe file not found"
 	source "$rcpfile"
 
-	set | grep ^NG3E_PKG_
+	set | grep ^SHI_PKG_
 
 	# figure out version based on supplied tag / branch
-	NG3E_PKG_VERSION=
-	[ -n "$NG3E_PKG_TAG" ] && NG3E_PKG_VERSION="$NG3E_PKG_TAG"
-	[ -z "$NG3E_PKG_VERSION" ] && NG3E_PKG_VERSION="$NG3E_PKG_BRANCH"
-	[ -z "$NG3E_PKG_VERSION" ] && __nok "version not set"
+	SHI_PKG_VERSION=
+	[ -n "$SHI_PKG_TAG" ] && SHI_PKG_VERSION="$SHI_PKG_TAG"
+	[ -z "$SHI_PKG_VERSION" ] && SHI_PKG_VERSION="$SHI_PKG_BRANCH"
+	[ -z "$SHI_PKG_VERSION" ] && __nok "version not set"
 
-	NG3E_PKG_DEPENDS=
-	export NG3E_PKG_DEPENDS
-	NG3E_PKG_RECIPE="$(basename $rcpfile .rcp)"
-	export NG3E_PKG_RECIPE
-	NG3E_PKG_RECIPE_FILE="$rcpfile"
-	export NG3E_PKG_RECIPE_FILE
-	NG3E_PKG_FULL_NAME="$NG3E_PKG_NAME-$NG3E_PKG_RECIPE"
-	export NG3E_PKG_FULL_NAME
+	SHI_PKG_DEPENDS=
+	export SHI_PKG_DEPENDS
+	SHI_PKG_RECIPE="$(basename $rcpfile .rcp)"
+	export SHI_PKG_RECIPE
+	SHI_PKG_RECIPE_FILE="$rcpfile"
+	export SHI_PKG_RECIPE_FILE
+	SHI_PKG_FULL_NAME="$SHI_PKG_NAME-$SHI_PKG_RECIPE"
+	export SHI_PKG_FULL_NAME
 
 	__ok
 }
@@ -80,11 +80,11 @@ function __load_needed_libs() {
 	rcp="$ver.rcp"
 
 	# get needed libs
-	deps=$(grep '^NG3E_PKG_NEED_LIBS=' $NG3E_PKGS/$name/$rcp | cut -f2 -d'=' | sed -e's/"//g')
+	deps=$(grep '^SHI_PKG_NEED_LIBS=' $SHI_PKGS/$name/$rcp | cut -f2 -d'=' | sed -e's/"//g')
 
 	for dep in $deps; do
 		__inf "LIB depend: $dep"
-		NG3E_PKG_DEPENDS="$NG3E_PKG_DEPENDS $dep"
+		SHI_PKG_DEPENDS="$SHI_PKG_DEPENDS $dep"
 		__load_dependencies "$dep"
 	done
 
@@ -101,10 +101,10 @@ function __load_needed_prods() {
 	rcp="$ver.rcp"
 
 	# get needed prods
-	deps=$(grep '^NG3E_PKG_NEED_PRODS=' $NG3E_PKGS/$name/$rcp | cut -f2 -d'=' | sed -e's/"//g')
+	deps=$(grep '^SHI_PKG_NEED_PRODS=' $SHI_PKGS/$name/$rcp | cut -f2 -d'=' | sed -e's/"//g')
 	for dep in $deps; do
 		__inf "PROD depend: $dep"
-		NG3E_PKG_DEPENDS="$NG3E_PKG_DEPENDS $dep"
+		SHI_PKG_DEPENDS="$SHI_PKG_DEPENDS $dep"
 		__load_dependencies "$dep"
 	done
 
@@ -117,11 +117,11 @@ function __load_dependencies() {
  	[ -z "$1" ] && __nok "package name not specified"
 
 	__load_needed_libs "$1"
-	if [ "$NG3E_PKG_GROUP" = "iocs" ]; then
+	if [ "$SHI_PKG_GROUP" = "iocs" ]; then
 		__load_needed_prods "$1"
 	fi
-	deps=$(echo "$NG3E_PKG_DEPENDS" | tr ' ' '\n' | sort | uniq)
-	NG3E_PKG_DEPENDS="$(echo $deps | tr '\n' ' ')"
+	deps=$(echo "$SHI_PKG_DEPENDS" | tr ' ' '\n' | sort | uniq)
+	SHI_PKG_DEPENDS="$(echo $deps | tr '\n' ' ')"
 
 	__ok
 }
@@ -130,18 +130,18 @@ function __get_released_base_versions() {
 	__in
 
 	tmp=""
-	pushd $NG3E_ROOT || __nok "root dir not found"
+	pushd $SHI_ROOT || __nok "root dir not found"
 	for dir in $(ls --color=never | grep ^R); do
 		if [ -d "$dir/base" ]; then
 			tmp="$tmp $dir"
 		fi
 	done
-	bases="NG3E_BASE_VERSIONS=\"$tmp\""
+	bases="SHI_BASE_VERSIONS=\"$tmp\""
 	eval "$bases"
-	if [ -z "$NG3E_BASE_VERSIONS" -a "$NG3E_PKG_NAME" != "base" ]; then
-		__nok "no released bases found in $NG3E_ROOT!"
+	if [ -z "$SHI_BASE_VERSIONS" -a "$SHI_PKG_NAME" != "base" ]; then
+		__nok "no released bases found in $SHI_ROOT!"
 	else
-		__inf "released base: $NG3E_BASE_VERSIONS"
+		__inf "released base: $SHI_BASE_VERSIONS"
 	fi
 	popd
 
@@ -201,19 +201,19 @@ function __have_stamp() {
 function __init() {
 	__in
 
-	for d in "$NG3E_STAGE" "$NG3E_POOL" "$NG3E_ROOT"; do
+	for d in "$SHI_STAGE" "$SHI_POOL" "$SHI_ROOT"; do
 		[ ! -d "$d" ] && mkdir -p "$d"
 	done
 
 	__load_recipe "$1"
-	__load_dependencies "$NG3E_PKG_NAME:$NG3E_PKG_VERSION"
-	__inf "final dependency list: $NG3E_PKG_DEPENDS"
+	__load_dependencies "$SHI_PKG_NAME:$SHI_PKG_VERSION"
+	__inf "final dependency list: $SHI_PKG_DEPENDS"
 	__get_released_base_versions
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
+	for base_ver in $SHI_BASE_VERSIONS; do
 		for d in modules iocs; do
-			[ ! -d "$NG3E_STAGE/$base_ver/$d" ] && mkdir -p "$NG3E_STAGE/$base_ver/$d"
-			[ ! -d "$NG3E_ROOT/$base_ver/$d" ] && mkdir -p "$NG3E_ROOT/$base_ver/$d"
+			[ ! -d "$SHI_STAGE/$base_ver/$d" ] && mkdir -p "$SHI_STAGE/$base_ver/$d"
+			[ ! -d "$SHI_ROOT/$base_ver/$d" ] && mkdir -p "$SHI_ROOT/$base_ver/$d"
 		done
 	done
 
@@ -225,10 +225,10 @@ function __clone() {
 
 	arg="$1"
 	[ -z "$arg" ] && __nok "missing argument"
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 
 	if [ ! -d "$dir" ]; then
-		git clone "$NG3E_PKG_SOURCE" "$dir" || __nok "clone failed"
+		git clone "$SHI_PKG_SOURCE" "$dir" || __nok "clone failed"
 	fi
 
 	__ok
@@ -239,28 +239,28 @@ function __checkout() {
 
 	arg="$1"
 	[ -z "$arg" ] && __nok "missing argument"
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 	[ ! -d "$dir" ] && __nok "src dir not found"
 
 	__have_stamp "$dir/checkout_done.stamp" && return 0
 
 	pushd "$dir" || __nok "cd to src dir failed"
 	# is version based on tag or branch?
-	if [ -n "$NG3E_PKG_TAG" -a "$NG3E_PKG_TAG" = "$NG3E_PKG_VERSION" ]; then
+	if [ -n "$SHI_PKG_TAG" -a "$SHI_PKG_TAG" = "$SHI_PKG_VERSION" ]; then
 		ver=$(git describe --tags --always)
-		if [ "$ver" != "$NG3E_PKG_VERSION" ]; then
-			git checkout --detach "$NG3E_PKG_VERSION" || __nok "checkout failed"
+		if [ "$ver" != "$SHI_PKG_VERSION" ]; then
+			git checkout --detach "$SHI_PKG_VERSION" || __nok "checkout failed"
 		fi
 		ver=$(git describe --tags)
-		[ "$ver" != "$NG3E_PKG_VERSION" ] && __nok "tag checkout failed"
+		[ "$ver" != "$SHI_PKG_VERSION" ] && __nok "tag checkout failed"
 	else
-		git checkout "$NG3E_PKG_VERSION" || __nok "checkout failed"
+		git checkout "$SHI_PKG_VERSION" || __nok "checkout failed"
 	fi
 	popd
-	__inf "Checked out version (tag/branch): $NG3E_PKG_NAME:$NG3E_PKG_VERSION"
+	__inf "Checked out version (tag/branch): $SHI_PKG_NAME:$SHI_PKG_VERSION"
 
-	if [ ! -f "$dir/$NG3E_PKG_RECIPE_FILE" ]; then
-		cp "$NG3E_PKG_RECIPE_FILE" "$dir" || __nok "recipe not found"
+	if [ ! -f "$dir/$SHI_PKG_RECIPE_FILE" ]; then
+		cp "$SHI_PKG_RECIPE_FILE" "$dir" || __nok "recipe not found"
 	fi
 
 	__create_stamp "$dir/checkout_done.stamp" || __nok "failed to create checkout_done.stamp"
@@ -273,7 +273,7 @@ function __distclean() {
 
 	arg="$1"
 	[ -z "$arg" ] && __nok "missing argument"
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 	[ ! -d "$dir" ] && __nok "src dir not found"
 
 	pushd "$dir" || __nok "cd to src dir failed"
@@ -291,7 +291,7 @@ function __compile() {
 
 	arg="$1"
 	[ -z "$arg" ] && __nok "missing argument"
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 	[ ! -d "$dir" ] && __nok "src dir not found"
 
 	__have_stamp "$dir/build_done.stamp" && return 0
@@ -312,21 +312,21 @@ function __deploy() {
 	[ -z "$arg" ] && __nok "missing argument"
 	# modules provide package full name as second argument (base does not)
 	[ -n "$2" ] && arg="$arg/$2"
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 	[ ! -d "$dir" ] && __nok "src dir not found"
 
 	__have_stamp "$dir/build_done.stamp" || return 1
 
-	rm -fr "$NG3E_ROOT/$arg"
-	mkdir -p "$NG3E_ROOT/$arg" || __nok "failed to create folder"
+	rm -fr "$SHI_ROOT/$arg"
+	mkdir -p "$SHI_ROOT/$arg" || __nok "failed to create folder"
 
-	rsync -a --exclude="O.*" --exclude=".git*" "$NG3E_STAGE/$arg/" "$NG3E_ROOT/$arg/" || __nok "failed to deploy"
+	rsync -a --exclude="O.*" --exclude=".git*" "$SHI_STAGE/$arg/" "$SHI_ROOT/$arg/" || __nok "failed to deploy"
 
-	if [ "$NG3E_PKG_GROUP" = "iocs" ]; then
+	if [ "$SHI_PKG_GROUP" = "iocs" ]; then
 		# change any 'stage' parts of the path to 'root' for envPaths
-		find "$NG3E_ROOT/$arg" -name envPaths | xargs sed -i -e 's#/stage/#/root/#'
+		find "$SHI_ROOT/$arg" -name envPaths | xargs sed -i -e 's#/stage/#/root/#'
 		# remove unused generated files cdCommands and dllPath.bat
-		find "$NG3E_ROOT/$arg" -name cdCommands -o -name dllPath.bat | xargs rm -f
+		find "$SHI_ROOT/$arg" -name cdCommands -o -name dllPath.bat | xargs rm -f
 	fi
 
 	__ok
@@ -339,19 +339,19 @@ function __release() {
 	arg="$1"
 	# modules provide package full name as second argument (base does not)
 	[ -n "$2" ] && arg="$arg/$2"
-	dir="$NG3E_ROOT/$arg"
+	dir="$SHI_ROOT/$arg"
 	[ ! -d "$dir" ] && __nok "src dir not found"
 
-	archive="$NG3E_PKG_FULL_NAME.tar.bz2"
+	archive="$SHI_PKG_FULL_NAME.tar.bz2"
 	rm -f "/tmp/$archive"
 
-	if [ -f "$NG3E_POOL/$archive" ]; then
-		__inf "archive $NG3E_POOL/$archive already exists!"
+	if [ -f "$SHI_POOL/$archive" ]; then
+		__inf "archive $SHI_POOL/$archive already exists!"
 		__ok
 		return 0
 	fi
 
-	pushd "$NG3E_ROOT"
+	pushd "$SHI_ROOT"
 	tar --exclude="O.*" --exclude-vcs -jcf "/tmp/$archive" "$arg" || __nok "tar stage dir failed"
 	popd
 
@@ -360,13 +360,13 @@ function __release() {
 #       one already existing - this should be prevented as current package might alredy
 #       be distributed to users!!!!
 
-#	if [ ! -f "$NG3E_POOL/$archive" ]; then
-#		mv "$NG3E_STAGE/$archive" "$NG3E_POOL" || __nok "failed to move archive to pool"
+#	if [ ! -f "$SHI_POOL/$archive" ]; then
+#		mv "$SHI_STAGE/$archive" "$SHI_POOL" || __nok "failed to move archive to pool"
 #	else
 #		__inf "archive already in the pool"
 #	fi
-	rm -f "$NG3E_POOL/$archive"
-	mv "/tmp/$archive" "$NG3E_POOL" || __nok "failed to move archive to pool"
+	rm -f "$SHI_POOL/$archive"
+	mv "/tmp/$archive" "$SHI_POOL" || __nok "failed to move archive to pool"
 
 	__ok
 }
@@ -379,13 +379,13 @@ function __remove() {
 
 	# remove stuff from all folders!
 
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 	[ ! -d "$dir" ] && __wrn "stage dir not found"
 	rm -fr "$dir"
-	dir="$NG3E_ROOT/$arg"
+	dir="$SHI_ROOT/$arg"
 	[ ! -d "$dir" ] && __wrn "root dir not found"
 	rm -fr "$dir"
-	file="$NG3E_POOL/$NG3E_PKG_FULL_NAME".tar.bz2
+	file="$SHI_POOL/$SHI_PKG_FULL_NAME".tar.bz2
 	[ ! -d "$file" ] && __wrn "pool archive not found"
 	rm -fr "$file"
 
@@ -399,7 +399,7 @@ function __remove() {
 function __distclean_base() {
 	__in
 
-	__distclean "$NG3E_PKG_VERSION/base"
+	__distclean "$SHI_PKG_VERSION/base"
 
 	__ok
 }
@@ -407,7 +407,7 @@ function __distclean_base() {
 function __devel_base() {
 	__in
 
-	__clone "$NG3E_PKG_VERSION/base"
+	__clone "$SHI_PKG_VERSION/base"
 
 	__ok
 }
@@ -415,10 +415,10 @@ function __devel_base() {
 function __build_base() {
 	__in
 
-	__clone "$NG3E_PKG_VERSION/base"
-	__checkout "$NG3E_PKG_VERSION/base"
-	__compile "$NG3E_PKG_VERSION/base"
-	__deploy "$NG3E_PKG_VERSION/base"
+	__clone "$SHI_PKG_VERSION/base"
+	__checkout "$SHI_PKG_VERSION/base"
+	__compile "$SHI_PKG_VERSION/base"
+	__deploy "$SHI_PKG_VERSION/base"
 
 	__ok
 }
@@ -426,11 +426,11 @@ function __build_base() {
 function __rebuild_base() {
 	__in
 
-	__clone "$NG3E_PKG_VERSION/base"
-	__distclean "$NG3E_PKG_VERSION/base"
-	__checkout "$NG3E_PKG_VERSION/base"
-	__compile "$NG3E_PKG_VERSION/base"
-	__deploy "$NG3E_PKG_VERSION/base"
+	__clone "$SHI_PKG_VERSION/base"
+	__distclean "$SHI_PKG_VERSION/base"
+	__checkout "$SHI_PKG_VERSION/base"
+	__compile "$SHI_PKG_VERSION/base"
+	__deploy "$SHI_PKG_VERSION/base"
 
 	__ok
 }
@@ -439,7 +439,7 @@ function __release_base() {
 	__in
 
 	__build_base
-	__release "$NG3E_PKG_VERSION/base"
+	__release "$SHI_PKG_VERSION/base"
 
 	__ok
 }
@@ -447,7 +447,7 @@ function __release_base() {
 function __remove_base() {
 	__in
 
-	__remove "$NG3E_PKG_VERSION/base"
+	__remove "$SHI_PKG_VERSION/base"
 
 	__ok
 }
@@ -459,8 +459,8 @@ function __remove_base() {
 function __distclean_module() {
 	__in
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
-		__distclean "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
+	for base_ver in $SHI_BASE_VERSIONS; do
+		__distclean "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
 	done
 
 	__ok
@@ -472,9 +472,9 @@ function __config_module() {
 	[ -z "$1" ] && __nok "missing argument"
 	[ -z "$2" ] && __nok "missing argument"
 	base_ver="$2"
-	dir="$NG3E_STAGE/$arg"
+	dir="$SHI_STAGE/$arg"
 	[ ! -d "$dir" ] && __nok "src dir not found"
-	basedir="$NG3E_ROOT/$base_ver/base"
+	basedir="$SHI_ROOT/$base_ver/base"
 	[ ! -d "$dir" ] && __nok "base dir not found"
 
 	__have_stamp "$dir/config_done.stamp" && return 0
@@ -482,13 +482,13 @@ function __config_module() {
 	release="$dir/configure/RELEASE"
 	[ ! -d "$dir/configure" ] && __nok "configure dir does not exist"
 
-	echo "# Autogenerated by NG3E on $(date)" > $release
+	echo "# Autogenerated by SHI on $(date)" > $release
 	echo >> $release
 	echo "## >>> dependencies from the recipe" >> $release
-	for dep in $NG3E_PKG_DEPENDS; do
+	for dep in $SHI_PKG_DEPENDS; do
 		name=$(echo $dep | cut -d: -f1)
 		rcp=$(echo $dep | cut -d: -f2)
-		pkgdir="$NG3E_ROOT/$base_ver/modules/${name}-${rcp}"
+		pkgdir="$SHI_ROOT/$base_ver/modules/${name}-${rcp}"
 		key=$(echo $name | tr [:lower:] [:upper:])
 		echo "$key=$pkgdir" >> $release
 	done
@@ -508,8 +508,8 @@ function __config_module() {
 function __devel_module() {
 	__in
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
-		__clone "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
+	for base_ver in $SHI_BASE_VERSIONS; do
+		__clone "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
 	done
 
 	__ok
@@ -518,12 +518,12 @@ function __devel_module() {
 function __build_module() {
 	__in
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
-		__clone "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__checkout "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__config_module "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME" "$base_ver"
-		__compile "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__deploy "$base_ver/$NG3E_PKG_GROUP" "$NG3E_PKG_FULL_NAME"
+	for base_ver in $SHI_BASE_VERSIONS; do
+		__clone "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__checkout "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__config_module "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME" "$base_ver"
+		__compile "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__deploy "$base_ver/$SHI_PKG_GROUP" "$SHI_PKG_FULL_NAME"
 	done
 
 	__ok
@@ -532,13 +532,13 @@ function __build_module() {
 function __rebuild_module() {
 	__in
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
-		__clone "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__checkout "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__config_module "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME" "$base_ver"
-		__distclean "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__compile "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
-		__deploy "$base_ver/$NG3E_PKG_GROUP" "$NG3E_PKG_FULL_NAME"
+	for base_ver in $SHI_BASE_VERSIONS; do
+		__clone "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__checkout "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__config_module "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME" "$base_ver"
+		__distclean "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__compile "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
+		__deploy "$base_ver/$SHI_PKG_GROUP" "$SHI_PKG_FULL_NAME"
 	done
 
 	__ok
@@ -547,9 +547,9 @@ function __rebuild_module() {
 function __release_module() {
 	__in
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
+	for base_ver in $SHI_BASE_VERSIONS; do
  		__build_module
-		__release "$base_ver/$NG3E_PKG_GROUP" "$NG3E_PKG_FULL_NAME"
+		__release "$base_ver/$SHI_PKG_GROUP" "$SHI_PKG_FULL_NAME"
 	done
 
 	__ok
@@ -558,8 +558,8 @@ function __release_module() {
 function __remove_module() {
 	__in
 
-	for base_ver in $NG3E_BASE_VERSIONS; do
-		__remove "$base_ver/$NG3E_PKG_GROUP/$NG3E_PKG_FULL_NAME"
+	for base_ver in $SHI_BASE_VERSIONS; do
+		__remove "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
 	done
 
 	__ok
@@ -569,15 +569,15 @@ function __remove_module() {
 #							TOP
 ##################################################################
 
-function ng3e_init() {
+function shi_init() {
 	__in
 	__nok "not implemented"
 }
 
-function ng3e_clean() {
+function shi_clean() {
 	__in
 
-	case $NG3E_PKG_GROUP in
+	case $SHI_PKG_GROUP in
 		bases)
 			__distclean_base ;;
 		modules|iocs)
@@ -589,10 +589,10 @@ function ng3e_clean() {
 	__ok
 }
 
-function ng3e_devel() {
+function shi_devel() {
 	__in
 
-	case $NG3E_PKG_GROUP in
+	case $SHI_PKG_GROUP in
 		bases)
 			__devel_base ;;
 		modules|iocs)
@@ -604,10 +604,10 @@ function ng3e_devel() {
 	__ok
 }
 
-function ng3e_build() {
+function shi_build() {
 	__in
 
-	case $NG3E_PKG_GROUP in
+	case $SHI_PKG_GROUP in
 		bases)
 			__build_base ;;
 		modules|iocs)
@@ -619,10 +619,10 @@ function ng3e_build() {
 	__ok
 }
 
-function ng3e_rebuild() {
+function shi_rebuild() {
 	__in
 
-	case $NG3E_PKG_GROUP in
+	case $SHI_PKG_GROUP in
 		bases)
 			__rebuild_base ;;
 		modules|iocs)
@@ -634,10 +634,10 @@ function ng3e_rebuild() {
 	__ok
 }
 
-function ng3e_release() {
+function shi_release() {
 	__in
 
-	case $NG3E_PKG_GROUP in
+	case $SHI_PKG_GROUP in
 		bases)
 			__release_base ;;
 		modules|iocs)
@@ -649,10 +649,10 @@ function ng3e_release() {
 	__ok
 }
 
-function ng3e_remove() {
+function shi_remove() {
 	__in
 
-	case $NG3E_PKG_GROUP in
+	case $SHI_PKG_GROUP in
 		bases)
 			__remove_base ;;
 		modules|iocs)
@@ -694,7 +694,7 @@ function usage() {
 		echo ""
 		echo "List of known packages and versions:"
 		echo ""
-		pushd $NG3E_PKGS >/dev/null
+		pushd $SHI_PKGS >/dev/null
 		printf "%20s ..... %s\n" "PACKAGE" "RECIPE(s)"
 		echo "----------------------------------------------------------------------------------"
 		pkgs=$(ls -1 -d */ | sed 's#/##')
@@ -709,11 +709,11 @@ function handle_recipe() {
 	__in
 
 	# show the environment and arguments
-	__inf "NG3E_TOP    : \"$NG3E_TOP\""
-	__inf "NG3E_PKGS   : \"$NG3E_PKGS\""
-	__inf "NG3E_STAGE  : \"$NG3E_STAGE\""
-	__inf "NG3E_POOL   : \"$NG3E_POOL\""
-	__inf "NG3E_ROOT   : \"$NG3E_ROOT\""
+	__inf "SHI_TOP    : \"$SHI_TOP\""
+	__inf "SHI_PKGS   : \"$SHI_PKGS\""
+	__inf "SHI_STAGE  : \"$SHI_STAGE\""
+	__inf "SHI_POOL   : \"$SHI_POOL\""
+	__inf "SHI_ROOT   : \"$SHI_ROOT\""
 	__inf "recipe      : \"$1\""
 	__inf "command     : \"$2\""
 
@@ -721,22 +721,22 @@ function handle_recipe() {
 
 	case $2 in
 	"clean")
-		ng3e_clean
+		shi_clean
 		;;
 	"devel")
-		ng3e_devel
+		shi_devel
 		;;
 	"build")
-		ng3e_build
+		shi_build
 		;;
 	"rebuild")
-		ng3e_rebuild
+		shi_rebuild
 		;;
 	"release")
-		ng3e_release
+		shi_release
 		;;
 	"remove")
-		ng3e_remove
+		shi_remove
 		;;
 	*)
 		__nok "unknown command"

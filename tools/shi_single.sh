@@ -3,13 +3,13 @@
 # Used to build a single package.
 # Dependencies are expected to be built and released beforehand.
 #
-# Usage: bash tools/ng3e_single.sh <path to .rcp file> <build|clean|release|..>
+# Usage: bash tools/shi_single.sh <path to .rcp file> <build|clean|release|..>
 #
 
-NG3E_DEBUG=1
-NG3E_DEPTH=1
+SHI_DEBUG=1
+SHI_DEPTH=1
 
-cd $(dirname $0) && source ng3e_env.sh
+cd $(dirname $0) && source shi_env.sh
 
 RCPFILE="$1"
 COMMAND="$2"

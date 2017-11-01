@@ -1,8 +1,8 @@
-NG3E_PKG_NAME="adsupport"
-NG3E_PKG_TAG="ESS-R1-3+1"
-NG3E_PKG_BRANCH=
-NG3E_PKG_SOURCE="https://github.com/hinxx/ADSupport.git"
-NG3E_PKG_UPSTREAM="https://github.com/areaDetector/ADSupport.git"
-NG3E_PKG_GROUP="modules"
-NG3E_PKG_NEED_LIBS=
-NG3E_PKG_NEED_PRODS=
+SHI_PKG_NAME="adsupport"
+SHI_PKG_TAG="ESS-R1-3+1"
+SHI_PKG_BRANCH=
+SHI_PKG_SOURCE="https://github.com/hinxx/ADSupport.git"
+SHI_PKG_UPSTREAM="https://github.com/areaDetector/ADSupport.git"
+SHI_PKG_GROUP="modules"
+SHI_PKG_NEED_LIBS=
+SHI_PKG_NEED_PRODS=
