@@ -1,6 +1,6 @@
 SHI_PKG_NAME="asyn"
-SHI_PKG_TAG="ESS-R4-32+1"
-SHI_PKG_BRANCH=
+SHI_PKG_TAG=
+SHI_PKG_BRANCH="SHI-R4-32"
 SHI_PKG_SOURCE="https://github.com/hinxx/asyn.git"
 SHI_PKG_UPSTREAM="https://github.com/epics-modules/asyn"
 SHI_PKG_GROUP="modules"
