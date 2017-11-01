@@ -5,4 +5,4 @@ SHI_PKG_SOURCE="https://github.com/hinxx/tlccsioc.git"
 SHI_PKG_UPSTREAM=
 SHI_PKG_GROUP="iocs"
 SHI_PKG_NEED_LIBS="adtlccs:master+1"
-SHI_PKG_NEED_PRODS="adcore:ESS-R3-1+1"
+SHI_PKG_NEED_PRODS="adcore:SHI-R3-1+1"
