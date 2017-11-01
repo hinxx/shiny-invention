@@ -712,13 +712,16 @@ function handle_recipe() {
 
 	# show the environment and arguments
 	__inf "SHI_TOP    : \"$SHI_TOP\""
+	__inf "SHI_TOPOUT : \"$SHI_TOPOUT\""
 	__inf "SHI_PKGS   : \"$SHI_PKGS\""
 	__inf "SHI_STAGE  : \"$SHI_STAGE\""
 	__inf "SHI_POOL   : \"$SHI_POOL\""
 	__inf "SHI_ROOT   : \"$SHI_ROOT\""
-	__inf "recipe      : \"$1\""
-	__inf "command     : \"$2\""
-
+	echo
+	__inf "RECIPE     : \"$1\""
+	__inf "COMMAND    : \"$2\""
+	echo
+	
 	__init "$1"
 
 	case $2 in
