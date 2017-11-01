@@ -1,8 +1,8 @@
 SHI_PKG_NAME="dtuioc"
-SHI_PKG_TAG="master+1"
+SHI_PKG_TAG="R1-0"
 SHI_PKG_BRANCH=
 SHI_PKG_SOURCE="https://github.com/hinxx/dtuioc.git"
 SHI_PKG_UPSTREAM=
 SHI_PKG_GROUP="iocs"
-SHI_PKG_NEED_LIBS="adaravis:ESS-master+1 adtlccs:master+1"
-SHI_PKG_NEED_PRODS="adcore:ESS-R3-1+1"
+SHI_PKG_NEED_LIBS="adaravis:SHI-master+1 adtlccs:master+1"
+SHI_PKG_NEED_PRODS="adcore:SHI-R3-1+1"
