@@ -1,0 +1,8 @@
+SHI_PKG_NAME="adtlccs"
+SHI_PKG_TAG="master+3"
+SHI_PKG_BRANCH=
+SHI_PKG_SOURCE="https://github.com/hinxx/adtlccs.git"
+SHI_PKG_UPSTREAM=
+SHI_PKG_GROUP="modules"
+SHI_PKG_NEED_LIBS="adcore:SHI-R3-1+1"
+SHI_PKG_NEED_PRODS=
