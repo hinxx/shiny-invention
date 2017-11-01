@@ -5,4 +5,4 @@ SHI_PKG_SOURCE="https://github.com/hinxx/andorIoc.git"
 SHI_PKG_UPSTREAM=
 SHI_PKG_GROUP="iocs"
 SHI_PKG_NEED_LIBS="adandor:master"
-SHI_PKG_NEED_PRODS="adcore:SHI-R3-1"
+SHI_PKG_NEED_PRODS="adcore:SHI-R3-1+1"
