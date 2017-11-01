@@ -4,5 +4,5 @@ SHI_PKG_BRANCH="master"
 SHI_PKG_SOURCE="https://github.com/hinxx/SimDetectorIOC.git"
 SHI_PKG_UPSTREAM=
 SHI_PKG_GROUP="iocs"
-SHI_PKG_NEED_LIBS="adsimdetector:ESS-R2-6+1"
-SHI_PKG_NEED_PRODS="adcore:ESS-R3-1+1"
+SHI_PKG_NEED_LIBS="adsimdetector:SHI-R2-6"
+SHI_PKG_NEED_PRODS="adcore:SHI-R3-1+1"
