@@ -79,6 +79,8 @@ function __load_needed_libs() {
 	ver=$(echo "$1" | cut -f2 -d':')
 	rcp="$ver.rcp"
 
+	[ ! -f $SHI_PKGS/$name/$rcp ] && __nok "recipe $SHI_PKGS/$name/$rcp not found"
+	
 	# get needed libs
 	deps=$(grep '^SHI_PKG_NEED_LIBS=' $SHI_PKGS/$name/$rcp | cut -f2 -d'=' | sed -e's/"//g')
 
@@ -297,7 +299,7 @@ function __compile() {
 	__have_stamp "$dir/build_done.stamp" && return 0
 
 	pushd "$dir" || __nok "cd to src dir failed"
-	make -Orecurse -j || __nok "compile failed"
+	make -j || __nok "compile failed"
 	popd
 
 	__create_stamp "$dir/build_done.stamp" || __nok "failed to create build_done.stamp"
