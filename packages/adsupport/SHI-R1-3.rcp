@@ -1,6 +1,6 @@
 SHI_PKG_NAME="adsupport"
-SHI_PKG_TAG="ESS-R1-3+1"
-SHI_PKG_BRANCH=
+SHI_PKG_TAG=
+SHI_PKG_BRANCH="SHI-R1-3"
 SHI_PKG_SOURCE="https://github.com/hinxx/ADSupport.git"
 SHI_PKG_UPSTREAM="https://github.com/areaDetector/ADSupport.git"
 SHI_PKG_GROUP="modules"

@@ -1,8 +1,0 @@
-SHI_PKG_NAME="adcore"
-SHI_PKG_TAG=
-SHI_PKG_BRANCH="ESS-R3-1"
-SHI_PKG_SOURCE="https://github.com/hinxx/ADCore.git"
-SHI_PKG_UPSTREAM="https://github.com/areaDetector/ADCore.git"
-SHI_PKG_GROUP="modules"
-SHI_PKG_NEED_LIBS="asyn:ESS-R4-32+1 adsupport:ESS-R1-3+1"
-SHI_PKG_NEED_PRODS="autosave:R5-8 busy:R1-6-1 calc:R5-4-2 sscan:R2-10-2"
