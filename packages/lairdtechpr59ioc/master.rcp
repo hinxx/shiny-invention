@@ -1,0 +1,8 @@
+SHI_PKG_NAME="lairdtechpr59ioc"
+SHI_PKG_TAG=
+SHI_PKG_BRANCH="master"
+SHI_PKG_SOURCE="https://github.com/hinxx/lairdtechpr59ioc.git"
+SHI_PKG_UPSTREAM=
+SHI_PKG_GROUP="iocs"
+SHI_PKG_NEED_LIBS="lairdtechpr59:master"
+SHI_PKG_NEED_PRODS=

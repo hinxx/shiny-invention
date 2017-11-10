@@ -32,7 +32,7 @@ Will install into __/usr/local__.
 
 ## Build IOC & dependent packages
 
-	export IMGIOC_RCP=master+3
+	export IMGIOC_RCP=master+4
 	bash tools/shi_batch.sh packages/imgioc/$IMGIOC_RCP.rcp
 
 ## Configure IOC
@@ -59,6 +59,8 @@ Configure the spectrometer ID:
 
 
 If no other USB TMC devices are present no configuration is needed for PM100USB.
+
+If no other USB serial devices are present no configuration is needed for LT59.
 
 ## Start the IOC
 

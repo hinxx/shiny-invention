@@ -1,0 +1,8 @@
+SHI_PKG_NAME="imgioc"
+SHI_PKG_TAG="master+4"
+SHI_PKG_BRANCH=
+SHI_PKG_SOURCE="https://github.com/hinxx/imgioc.git"
+SHI_PKG_UPSTREAM=
+SHI_PKG_GROUP="iocs"
+SHI_PKG_NEED_LIBS="adaravis:ESS-master+2 adtlccs:master+2 tlpm100:master+1 lairdtechpr59:master+1"
+SHI_PKG_NEED_PRODS="streamdevice:master+1 adcore:ESS-R3-1+1"

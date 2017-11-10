@@ -4,5 +4,5 @@ SHI_PKG_BRANCH="master"
 SHI_PKG_SOURCE="https://github.com/hinxx/imgioc.git"
 SHI_PKG_UPSTREAM=
 SHI_PKG_GROUP="iocs"
-SHI_PKG_NEED_LIBS="adaravis:SHI-master+1 adtlccs:master+3 tlpm100:master+1"
+SHI_PKG_NEED_LIBS="adaravis:SHI-master+1 adtlccs:master+3 tlpm100:master+1 lairdtechpr59:master"
 SHI_PKG_NEED_PRODS="streamdevice:master+1 adcore:SHI-R3-1+1"
