@@ -19,11 +19,11 @@ if [ -z "$ACTION" ]; then
 	exit 1
 fi
 if [ -z "$RCPFILE" ]; then
-	usage $0 "<single|batch> <path to .rcp file> [<build|clean|release|..>]"
+	usage $0 $ACTION
 	exit 1
 fi
 if [ -z "$COMMAND" ]; then
-	usage $0 "<single|batch> <path to .rcp file> [<build|clean|release|..>]"
+	usage $0 $ACTION
 	exit 1
 fi
 

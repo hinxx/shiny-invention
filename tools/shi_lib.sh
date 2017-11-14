@@ -694,10 +694,10 @@ function shi_remove() {
 
 function usage() {
 		echo ""
-		echo "Usage:"
+		echo "Usage: bash $1 ACTION RECIPE [COMMAND]"
 		echo ""
 		if [ "$2" = "single" ]; then
-			echo " bash $1 RECIPE COMMAND"
+			# echo " bash $1 ACTION RECIPE [COMMAND]"
 			echo ""
 			echo "     RECIPE ....... path to recipe file (*.rcp)"
 			echo ""
@@ -709,9 +709,15 @@ function usage() {
 			echo "    release         perform rebuild and package"
 			echo "     remove         remove files from stage and root"
 		elif [ "$2" = "batch" ]; then
-			echo " bash $1 RECIPE"
+			# echo " bash $1 RECIPE"
 			echo ""
 			echo "     RECIPE ....... path to recipe file (*.rcp)"
+		else
+			echo "Missing/invalid ACTION"
+			echo ""
+			echo "     ACTION ....... single | batch"
+			echo ""
+			return
 		fi
 
 		echo ""
