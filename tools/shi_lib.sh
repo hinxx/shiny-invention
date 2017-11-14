@@ -80,7 +80,7 @@ function __load_needed_libs() {
 	rcp="$ver.rcp"
 
 	[ ! -f $SHI_PKGS/$name/$rcp ] && __nok "recipe $SHI_PKGS/$name/$rcp not found"
-	
+
 	# get needed libs
 	deps=$(grep '^SHI_PKG_NEED_LIBS=' $SHI_PKGS/$name/$rcp | cut -f2 -d'=' | sed -e's/"//g')
 
@@ -213,6 +213,7 @@ function __init() {
 	__get_released_base_versions
 
 	for base_ver in $SHI_BASE_VERSIONS; do
+		[ ! -d "$SHI_POOL/$base_ver" ] && mkdir -p "$SHI_POOL/$base_ver"
 		for d in modules iocs; do
 			[ ! -d "$SHI_STAGE/$base_ver/$d" ] && mkdir -p "$SHI_STAGE/$base_ver/$d"
 			[ ! -d "$SHI_ROOT/$base_ver/$d" ] && mkdir -p "$SHI_ROOT/$base_ver/$d"
@@ -261,9 +262,9 @@ function __checkout() {
 	popd
 	__inf "Checked out version (tag/branch): $SHI_PKG_NAME:$SHI_PKG_VERSION"
 
-	if [ ! -f "$dir/$SHI_PKG_RECIPE_FILE" ]; then
-		cp "$SHI_PKG_RECIPE_FILE" "$dir" || __nok "recipe not found"
-	fi
+#	if [ ! -f "$dir/$SHI_PKG_RECIPE_FILE" ]; then
+#		cp "$SHI_PKG_RECIPE_FILE" "$dir" || __nok "recipe not found"
+#	fi
 
 	__create_stamp "$dir/checkout_done.stamp" || __nok "failed to create checkout_done.stamp"
 
@@ -345,10 +346,11 @@ function __release() {
 	[ ! -d "$dir" ] && __nok "src dir not found"
 
 	archive="$SHI_PKG_FULL_NAME.tar.bz2"
-	rm -f "/tmp/$archive"
+	nfo="$SHI_PKG_FULL_NAME.nfo"
+	rm -f "/tmp/$archive" "/tmp/$nfo"
 
-	if [ -f "$SHI_POOL/$archive" ]; then
-		__inf "archive $SHI_POOL/$archive already exists!"
+	if [ -f "$SHI_POOL/$SHI_BASE_VERSION/$archive" ]; then
+		__inf "archive $SHI_POOL/$SHI_BASE_VERSION/$archive already exists!"
 		__ok
 		return 0
 	fi
@@ -357,18 +359,31 @@ function __release() {
 	tar --exclude="O.*" --exclude-vcs -jcf "/tmp/$archive" "$arg" || __nok "tar stage dir failed"
 	popd
 
-# XXX: do we need this?
-#      should we be allowed to overwrite existing archive that might be different from
-#       one already existing - this should be prevented as current package might alredy
-#       be distributed to users!!!!
+	rm -f "$SHI_POOL/$SHI_BASE_VERSION/$archive"
+	mv "/tmp/$archive" "$SHI_POOL/$SHI_BASE_VERSION" || __nok "failed to move archive to pool"
+	sum=$(md5sum $SHI_POOL/$SHI_BASE_VERSION/$archive | awk '{ print $1; }')
+	size=$(stat -c '%s' $SHI_POOL/$SHI_BASE_VERSION/$archive)
 
-#	if [ ! -f "$SHI_POOL/$archive" ]; then
-#		mv "$SHI_STAGE/$archive" "$SHI_POOL" || __nok "failed to move archive to pool"
-#	else
-#		__inf "archive already in the pool"
-#	fi
-	rm -f "$SHI_POOL/$archive"
-	mv "/tmp/$archive" "$SHI_POOL" || __nok "failed to move archive to pool"
+	cat << EOF > /tmp/$nfo
+name: $SHI_PKG_NAME
+version: $SHI_PKG_VERSION
+package: $SHI_PKG_FULL_NAME
+archive: $archive
+group: $SHI_PKG_GROUP
+tag: $SHI_PKG_TAG
+branch: $SHI_PKG_BRANCH
+source: $SHI_PKG_SOURCE
+base: base:$SHI_BASE_VERSION
+dependencies: $SHI_PKG_DEPENDS
+root: $SHI_ROOT
+md5sum: $sum
+builder: $USER
+machine: $(hostname)
+datetime: $(date)
+size: $size
+EOF
+
+	mv "/tmp/$nfo" "$SHI_POOL/$SHI_BASE_VERSION"
 
 	__ok
 }
@@ -387,9 +402,12 @@ function __remove() {
 	dir="$SHI_ROOT/$arg"
 	[ ! -d "$dir" ] && __wrn "root dir not found"
 	rm -fr "$dir"
-	file="$SHI_POOL/$SHI_PKG_FULL_NAME".tar.bz2
+	file="$SHI_POOL/$SHI_BASE_VERSION/$SHI_PKG_FULL_NAME".tar.bz2
 	[ ! -d "$file" ] && __wrn "pool archive not found"
-	rm -fr "$file"
+	rm -f "$file"
+	file="$SHI_POOL/$SHI_BASE_VERSION/$SHI_PKG_FULL_NAME".nfo
+	[ ! -d "$file" ] && __wrn "pool nfo not found"
+	rm -f "$file"
 
 	__ok
 }
@@ -441,6 +459,7 @@ function __release_base() {
 	__in
 
 	__build_base
+	export SHI_BASE_VERSION=$SHI_PKG_VERSION
 	__release "$SHI_PKG_VERSION/base"
 
 	__ok
@@ -449,6 +468,7 @@ function __release_base() {
 function __remove_base() {
 	__in
 
+	export SHI_BASE_VERSION=$SHI_PKG_VERSION
 	__remove "$SHI_PKG_VERSION/base"
 
 	__ok
@@ -551,6 +571,7 @@ function __release_module() {
 
 	for base_ver in $SHI_BASE_VERSIONS; do
  		__build_module
+		export SHI_BASE_VERSION=$base_ver
 		__release "$base_ver/$SHI_PKG_GROUP" "$SHI_PKG_FULL_NAME"
 	done
 
@@ -561,6 +582,7 @@ function __remove_module() {
 	__in
 
 	for base_ver in $SHI_BASE_VERSIONS; do
+		export SHI_BASE_VERSION=$base_ver
 		__remove "$base_ver/$SHI_PKG_GROUP/$SHI_PKG_FULL_NAME"
 	done
 
@@ -691,7 +713,7 @@ function usage() {
 			echo ""
 			echo "     RECIPE ....... path to recipe file (*.rcp)"
 		fi
-		
+
 		echo ""
 		echo ""
 		echo "List of known packages and versions:"
@@ -721,7 +743,7 @@ function handle_recipe() {
 	__inf "RECIPE     : \"$1\""
 	__inf "COMMAND    : \"$2\""
 	echo
-	
+
 	__init "$1"
 
 	case $2 in
